@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  database:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      TZ: 'UTC'
+    ports:
+      - "6033:3306"
+    volumes:
+      - mysql_data_local:/var/lib/mysql
+    command: ["--max-allowed-packet=134217728"]
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "docker", "-pdocker"]
+      timeout: 10s
+      retries: 10
+
+volumes:
+  mysql_data_local:
+    driver: local
